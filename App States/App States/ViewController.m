@@ -8,9 +8,13 @@
 
 #import "ViewController.h"
 #import "UIImageView+WebCache.h"
+#import "SVHTTPRequest.h"
 #import "UserTableViewCell.h"
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface ViewController ()
+
+@property (nonatomic) UIImage *selectedImage;
 
 @end
 
@@ -32,6 +36,18 @@
         [self.tableView sendSubviewToBack:refreshControl];
         self.refreshControl = refreshControl;
     }
+    
+    [self onRefresh:self];
+}
+
+- (IBAction)addImage:(id)sender {
+    
+    UIActionSheet *popup = [[UIActionSheet alloc] initWithTitle:@"Select photo upload option:" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:
+                            @"Use last taken photo",
+                            @"Choose photo",
+                            nil];
+    popup.tag = 1;
+    [popup showInView:[UIApplication sharedApplication].keyWindow];
 }
 
 -(void)onRefresh:(id)sender {
@@ -44,7 +60,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    [[UIApplication sharedApplication] openURL:
+     [NSURL URLWithString: @"soundcloud://tracks:125636702"]];
+//      @"music://"]];
+//      @"http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewAlbum?i=156093464&id=156093462&s=143441"]];
+//      @"spotify:track:2QO8cnnFW6khDuAuUAySeV#19000"]];
     
+    [self.tableView deselectRowAtIndexPath:[self.tableView indexPathForSelectedRow] animated:YES];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -76,6 +98,94 @@
     return 5;
 }
 
+#pragma mark - UIImagePickerControllerDelegate
+
+// This method is called when an image has been chosen from the library or taken from the camera.
+- (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    UIImage *image = [info valueForKey:UIImagePickerControllerOriginalImage];
+    self.selectedImage = image;
+    [self uploadPhotoToServer];
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+
+- (void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:NULL];
+}
+
+#pragma mark UIActionSheetDelegate
+
+- (void)actionSheet:(UIActionSheet *)popup clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    switch (popup.tag) {
+        case 1: {
+            switch (buttonIndex) {
+                case 0:
+                    [self getLastTaken];
+                    break;
+                case 1:
+                    [self popUpImagePicker];
+                    break;
+            }
+            break;
+        }
+        default:
+            break;
+    }
+}
+
+-(void)getLastTaken {
+    ALAssetsLibrary *assetsLibrary = [[ALAssetsLibrary alloc] init];
+    [assetsLibrary enumerateGroupsWithTypes:ALAssetsGroupSavedPhotos
+                                 usingBlock:^(ALAssetsGroup *group, BOOL *stop) {
+                                     if (nil != group) {
+                                         // be sure to filter the group so you only get photos
+                                         [group setAssetsFilter:[ALAssetsFilter allPhotos]];
+                                         
+                                         if (group.numberOfAssets > 0) {
+                                             [group enumerateAssetsAtIndexes:[NSIndexSet indexSetWithIndex:group.numberOfAssets - 1]
+                                                                     options:0
+                                                                  usingBlock:^(ALAsset *result, NSUInteger index, BOOL *stop) {
+                                                                      if (nil != result) {
+                                                                          ALAssetRepresentation *repr = [result defaultRepresentation];
+                                                                          // this is the most recent saved photo
+                                                                          UIImage *img = [UIImage imageWithCGImage:[repr fullResolutionImage]];
+                                                                          self.selectedImage = img;
+                                                                          // we only need the first (most recent) photo -- stop the enumeration
+                                                                          *stop = YES;
+                                                                      }
+                                                                  }];
+                                         }
+                                     }
+                                     
+                                     *stop = NO;
+                                 } failureBlock:^(NSError *error) {
+                                     NSLog(@"error: %@", error);
+                                 }];
+    
+    [self uploadPhotoToServer];
+}
+
+-(void)popUpImagePicker {
+    UIImagePickerController *imagePickerController = [[UIImagePickerController alloc] init];
+    imagePickerController.modalPresentationStyle = UIModalPresentationCurrentContext;
+    imagePickerController.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+    imagePickerController.delegate = self;
+    [self presentViewController:imagePickerController animated:YES completion:nil];
+}
+
+-(void)uploadPhotoToServer {
+    [SVHTTPRequest POST:@"/upload"
+             parameters:[NSDictionary dictionaryWithObjectsAndKeys:self.selectedImage, @"status_image", nil]
+               progress:^(float progress) {
+
+               }
+             completion:^(id response, NSHTTPURLResponse *urlResponse, NSError *error) {
+                 // Done
+             }];
+}
 
 
 

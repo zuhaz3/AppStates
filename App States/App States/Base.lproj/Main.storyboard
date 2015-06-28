@@ -155,7 +155,13 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="App States" id="Cn4-AB-UYY"/>
+                    <navigationItem key="navigationItem" title="App States" id="Cn4-AB-UYY">
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="ZPX-lw-uA6">
+                            <connections>
+                                <action selector="addImage:" destination="vXZ-lx-hvc" id="Q0z-th-WCw"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="tableView" destination="AUN-DC-TVA" id="JIB-Je-byE"/>
                     </connections>
