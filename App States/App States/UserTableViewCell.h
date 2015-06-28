@@ -16,5 +16,6 @@
 @property (strong, nonatomic) IBOutlet UIView *opacityFilter;
 @property (strong, nonatomic) IBOutlet UILabel *uploadersName;
 @property (strong, nonatomic) IBOutlet UILabel *appName;
+@property (nonatomic, strong) NSString *deeplink;
 
 @end

@@ -38,11 +38,28 @@
         self.refreshControl = refreshControl;
     }
     
+    self.elems = [[NSMutableArray alloc] init];
+    
+    [self.refreshControl beginRefreshing];
     [self onRefresh:self];
 }
 
 -(void)onRefresh:(id)sender {
-    [self.refreshControl endRefreshing];
+    
+    [[SVHTTPClient sharedClient] setBasePath:@"http://45.55.12.167:5000"];
+    
+    [[SVHTTPClient sharedClient] GET:@"/users/"
+                          parameters:nil
+                          completion:^(id response, NSHTTPURLResponse *urlResponse, NSError *error) {
+                              if (error) {
+                                  NSLog(@"ERROR %@", [error localizedDescription]);
+                              } else {
+                                   self.elems = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+                                  NSLog(@"response %@", response);
+                                  [self.tableView reloadData];
+                                  [self.refreshControl endRefreshing];
+                              }
+                          }];
 }
 
 - (IBAction)addImage:(id)sender {
@@ -61,7 +78,9 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     [[UIApplication sharedApplication] openURL:
-     [NSURL URLWithString: @"soundcloud://tracks:125636702"]];
+     [NSURL URLWithString: @"spotify:track:39Bi2scq80BWdgnxz2llWT#04:04"]];
+
+    //    @"soundcloud://tracks:125636702"]];
     //      @"music://"]];
     //      @"http://phobos.apple.com/WebObjects/MZStore.woa/wa/viewAlbum?i=156093464&id=156093462&s=143441"]];
     //      @"spotify:track:2QO8cnnFW6khDuAuUAySeV#19000"]];
@@ -79,6 +98,13 @@
                 initWithStyle:UITableViewCellStyleDefault
                 reuseIdentifier:CellIdentifier];
     }
+    
+    cell.userName.text = @"Funniest Vines of 2014";
+    cell.uploadersName.text = @"Yonatan Oren";
+    cell.appName.text = @"YouTube";
+    [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:@"https://scontent-sjc2-1.xx.fbcdn.net/hphotos-xat1/v/t1.0-9/11140123_10205930822208356_8239274392144222994_n.jpg?oh=8a86407a6f1da377ee7f67e5f6c31361&oe=56318DB4"]
+                         placeholderImage:[UIImage imageNamed:@"profile"] options:SDWebImageRefreshCached];
+    
     if(indexPath.row % 4 == 1){
         cell.opacityFilter.backgroundColor = [UIColor colorWithRed:0.902 green:0.494 blue:0.133 alpha:0.75];
     }
@@ -88,8 +114,8 @@
     else if (indexPath.row % 4 == 3){
         cell.opacityFilter.backgroundColor = [UIColor colorWithRed:0.608 green:0.349 blue:0.714 alpha:0.75];
     }
-    cell.uploadersName.text = @"Danish Shaik";
-    cell.appName.text = @"Spotify";
+//    cell.uploadersName.text = @"Danish Shaik";
+//    cell.appName.text = @"Spotify";
     
     cell.opacityFilter.layer.cornerRadius = 3;
     cell.opacityFilter.layer.masksToBounds = YES;
@@ -101,10 +127,10 @@
     cell.profileImage.layer.cornerRadius = 22;
     cell.profileImage.layer.masksToBounds = YES;
     cell.profileImage.layer.borderWidth = 0;
-    [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:@"https://pbs.twimg.com/profile_images/514108659660759040/PwcLTe3q_400x400.jpeg"]
-                         placeholderImage:[UIImage imageNamed:@"profile"] options:SDWebImageRefreshCached];
+//    [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:@"https://pbs.twimg.com/profile_images/514108659660759040/PwcLTe3q_400x400.jpeg"]
+//                         placeholderImage:[UIImage imageNamed:@"profile"] options:SDWebImageRefreshCached];
     
-    cell.userName.text = @"No Church in the Wild, Kanye West";
+//    cell.userName.text = @"No Church in the Wild, Kanye West";
     cell.userName.textColor = [UIColor whiteColor];
     
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
@@ -117,7 +143,10 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return 5;
+    if (self.elems == nil) {
+        return 0;
+    }
+    return [self.elems count];
 }
 
 #pragma mark - UIImagePickerControllerDelegate
