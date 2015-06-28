@@ -55,15 +55,36 @@
                                   NSLog(@"ERROR %@", [error localizedDescription]);
                               } else {
                                   if ([response isKindOfClass:[NSArray class]]) {
-                                      self.elems = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
-                                      NSLog(@"response %@", response);
-                                      [self.tableView reloadData];
-                                      [self.refreshControl endRefreshing];
+//                                      self.elems = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+//                                      NSLog(@"response %@", response);
+//                                      [self.tableView reloadData];
+//                                      [self.refreshControl endRefreshing];
                                   } else {
                                       // error not array
                                   }
                               }
                           }];
+    
+    NSArray *temp = @[@{
+                          @"profileurl":@"https://scontent-sjc2-1.xx.fbcdn.net/hphotos-xat1/v/t1.0-9/11140123_10205930822208356_8239274392144222994_n.jpg?oh=8a86407a6f1da377ee7f67e5f6c31361&oe=56318DB4",
+                          @"deeplink":@"spotify://track/7ec2JcPaqHI0XqkmS1MIHD",
+                          @"name":@"Yonatan Oren"
+                          }, @{
+                          @"profileurl":@"https://scontent-sjc2-1.xx.fbcdn.net/hphotos-xfa1/t31.0-8/10974160_790194777725137_8884707250453265044_o.jpg",
+                          @"deeplink":@"spotify://track/5IyblF777jLZj1vGHG2UD3",
+                          @"name":@"Danish Shaik"
+                          }, @{
+                          @"profileurl":@"https://scontent-sjc2-1.xx.fbcdn.net/hphotos-xpa1/t31.0-8/11046841_1615606718663113_4740997595817061651_o.jpg",
+                          @"deeplink":@"http://www.netflix.com/watch/70248289",
+                          @"name":@"Zuhayeer Musa"
+                          }, @{
+                          @"profileurl":@"https://scontent-sjc2-1.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/1510644_10155541769780137_3880749382891935446_n.jpg?oh=1fba279853c1ea0b70a38259ee4f95c7&oe=561966AE",
+                          @"deeplink":@"https://www.youtube.com/watch?v=aebcJ6R0roA#t=37s",
+                          @"name":@"Norman Tasfi"
+                          }];
+    self.elems = [temp mutableCopy];
+    [self.tableView reloadData];
+    [self.refreshControl endRefreshing];
 }
 
 - (IBAction)addImage:(id)sender {
@@ -81,8 +102,13 @@
 }
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    
+    UserTableViewCell * cell = (UserTableViewCell *)[(UITableView *)self.tableView cellForRowAtIndexPath:indexPath];
+    
     [[UIApplication sharedApplication] openURL:
-     [NSURL URLWithString: @"spotify:track:39Bi2scq80BWdgnxz2llWT#04:04"]];
+     [NSURL URLWithString:cell.deeplink]];
+                                
+//      @"spotify:track:39Bi2scq80BWdgnxz2llWT#04:04"]];
 
     //    @"soundcloud://tracks:125636702"]];
     //      @"music://"]];
@@ -103,11 +129,14 @@
                 reuseIdentifier:CellIdentifier];
     }
     
+    id obj = self.elems[indexPath.row];
+    
     cell.userName.text = @"Funniest Vines of 2014";
-    cell.uploadersName.text = @"Yonatan Oren";
+    cell.uploadersName.text = obj[@"name"];
     cell.appName.text = @"YouTube";
-    [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:@"https://scontent-sjc2-1.xx.fbcdn.net/hphotos-xat1/v/t1.0-9/11140123_10205930822208356_8239274392144222994_n.jpg?oh=8a86407a6f1da377ee7f67e5f6c31361&oe=56318DB4"]
+    [cell.profileImage sd_setImageWithURL:[NSURL URLWithString:obj[@"profileurl"]]
                          placeholderImage:[UIImage imageNamed:@"profile"] options:SDWebImageRefreshCached];
+    cell.deeplink = obj[@"deeplink"];
     
     if(indexPath.row % 4 == 1){
         cell.opacityFilter.backgroundColor = [UIColor colorWithRed:0.902 green:0.494 blue:0.133 alpha:0.75];
