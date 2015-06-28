@@ -204,7 +204,7 @@
         // add image data
         if (imageData) {
             [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=%@; filename=imageName.jpg\r\n", @"imageFormKey"] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=%@; filename=file.jpg\r\n", @"file"] dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:imageData];
             [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
@@ -224,6 +224,7 @@
             if(data.length > 0)
             {
                 //success
+                NSLog(@"RESPONSE %@", response);
             }
         }];
     }
