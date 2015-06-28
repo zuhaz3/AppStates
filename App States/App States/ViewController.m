@@ -181,21 +181,20 @@
     if (img != nil) {
         
         NSData *imageData = UIImageJPEGRepresentation(img, 0.5);
-        NSString *postLength = [NSString stringWithFormat:@"%d", [imageData length]];
         
-        // Init and set fields of the URLRequest
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-        [request setHTTPMethod:@"POST"];
-        [request setURL:[NSURL URLWithString:@"http://45.55.12.167:5000/upload"]];
-        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
-        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
-        [request setHTTPBody:imageData];
+        AFHTTPRequestOperationManager *manager = [AFHTTPRequestOperationManager manager];
         
-        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
-        if (connection) {
-            // Return data of the request
-//            NSData *receivedData = [[NSMutableData data] retain];
-        }
+        [manager POST:@"http://45.55.12.167:5000/upload" parameters:nil constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+            [formData appendPartWithFileData:imageData
+                                        name:@"file"
+                                    fileName:@"file.jpg" mimeType:@"image/jpeg"];
+            
+            // etc.
+        } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSLog(@"Response: %@", responseObject);
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@", error);
+        }];
     }
 }
 

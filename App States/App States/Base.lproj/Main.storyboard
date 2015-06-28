@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="7702" systemVersion="14E26a" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="xlE-MA-6u4">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="7701"/>
+        <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
@@ -75,7 +76,7 @@
                                                     </attributedString>
                                                     <nil key="highlightedColor"/>
                                                     <variation key="widthClass=compact" misplaced="YES">
-                                                        <rect key="frame" x="79" y="27" width="305" height="21"/>
+                                                        <rect key="frame" x="79" y="27" width="228" height="21"/>
                                                     </variation>
                                                 </label>
                                             </subviews>
@@ -92,11 +93,11 @@
                                                     <exclude reference="2kJ-zR-7A2"/>
                                                 </mask>
                                                 <mask key="constraints">
-                                                    <exclude reference="5wV-MA-3IM"/>
-                                                    <exclude reference="lkA-GU-sz8"/>
                                                     <exclude reference="0uL-IN-aaV"/>
                                                     <exclude reference="DkO-D6-zH8"/>
                                                     <exclude reference="HLI-Wa-IK4"/>
+                                                    <exclude reference="5wV-MA-3IM"/>
+                                                    <exclude reference="lkA-GU-sz8"/>
                                                 </mask>
                                             </variation>
                                             <variation key="widthClass=compact">
@@ -105,11 +106,11 @@
                                                     <include reference="2kJ-zR-7A2"/>
                                                 </mask>
                                                 <mask key="constraints">
-                                                    <include reference="5wV-MA-3IM"/>
-                                                    <include reference="lkA-GU-sz8"/>
                                                     <include reference="0uL-IN-aaV"/>
                                                     <include reference="DkO-D6-zH8"/>
                                                     <include reference="HLI-Wa-IK4"/>
+                                                    <include reference="5wV-MA-3IM"/>
+                                                    <include reference="lkA-GU-sz8"/>
                                                 </mask>
                                             </variation>
                                         </tableViewCellContentView>
@@ -137,10 +138,10 @@
                                 <exclude reference="AUN-DC-TVA"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="mgr-FN-UWh"/>
                                 <exclude reference="8e6-hR-GIJ"/>
                                 <exclude reference="Aal-MR-BUB"/>
                                 <exclude reference="rCS-CM-R0f"/>
-                                <exclude reference="mgr-FN-UWh"/>
                             </mask>
                         </variation>
                         <variation key="widthClass=compact">
@@ -148,10 +149,10 @@
                                 <include reference="AUN-DC-TVA"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="mgr-FN-UWh"/>
                                 <include reference="8e6-hR-GIJ"/>
                                 <include reference="Aal-MR-BUB"/>
                                 <include reference="rCS-CM-R0f"/>
-                                <include reference="mgr-FN-UWh"/>
                             </mask>
                         </variation>
                     </view>
