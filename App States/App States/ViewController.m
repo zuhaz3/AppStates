@@ -43,8 +43,8 @@
 - (IBAction)addImage:(id)sender {
     
     UIActionSheet *popup = [[UIActionSheet alloc] initWithTitle:@"Select photo upload option:" delegate:self cancelButtonTitle:@"Cancel" destructiveButtonTitle:nil otherButtonTitles:
-                            @"Use last taken photo",
-                            @"Choose photo",
+                            @"Use Last Taken",
+                            @"Choose Photo",
                             nil];
     popup.tag = 1;
     [popup showInView:[UIApplication sharedApplication].keyWindow];
@@ -105,7 +105,7 @@
 {
     UIImage *image = [info valueForKey:UIImagePickerControllerOriginalImage];
     self.selectedImage = image;
-    [self uploadPhotoToServer];
+    [self uploadPhotoToServer:image];
     [self dismissViewControllerAnimated:YES completion:NULL];
 }
 
@@ -153,6 +153,7 @@
                                                                           // this is the most recent saved photo
                                                                           UIImage *img = [UIImage imageWithCGImage:[repr fullResolutionImage]];
                                                                           self.selectedImage = img;
+                                                                          [self uploadPhotoToServer:img];
                                                                           // we only need the first (most recent) photo -- stop the enumeration
                                                                           *stop = YES;
                                                                       }
@@ -164,8 +165,6 @@
                                  } failureBlock:^(NSError *error) {
                                      NSLog(@"error: %@", error);
                                  }];
-    
-    [self uploadPhotoToServer];
 }
 
 -(void)popUpImagePicker {
@@ -176,15 +175,76 @@
     [self presentViewController:imagePickerController animated:YES completion:nil];
 }
 
--(void)uploadPhotoToServer {
-    [SVHTTPRequest POST:@"/upload"
-             parameters:[NSDictionary dictionaryWithObjectsAndKeys:self.selectedImage, @"status_image", nil]
-               progress:^(float progress) {
+-(void)uploadPhotoToServer:(UIImage *)img {
+    
+    if (img != nil) {
+        // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
+        NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
+        
+        // string constant for the post parameter 'file'. My server uses this name: `file`. Your's may differ
+        NSString* FileParamConstant = @"file";
+        
+        // the server url to which the image (or the media) is uploaded. Use your server url here
+        NSURL* requestURL = [NSURL URLWithString:@"http://45.55.12.167:5000/upload/"];
+        
+        // create request
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+        [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
+        [request setHTTPShouldHandleCookies:NO];
+        [request setTimeoutInterval:60];
+        [request setHTTPMethod:@"POST"];
+        
+        // set Content-Type in HTTP header
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+        [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
+        
+        // post body
+        NSMutableData *body = [NSMutableData data];
+        
+        // add image data
+        NSData *imageData = UIImageJPEGRepresentation(img, 1.0);
+        if (imageData) {
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"file.jpg\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:imageData];
+            [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+        }
+        
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        
+        // setting the body of the post to the reqeust
+        [request setHTTPBody:body];
+        
+        // set the content-length
+        NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[body length]];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        
+        // set URL
+        [request setURL:requestURL];
+        
+        NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
+    }
+}
 
-               }
-             completion:^(id response, NSHTTPURLResponse *urlResponse, NSError *error) {
-                 // Done
-             }];
+#pragma mark - NSURLConnection Delegate Methods
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
+    NSString *responseString = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    NSLog(@"RESPONSE %@", responseString);
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
+    NSLog(@"DID RECEIVE DATA");
+}
+
+- (void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error {
+    NSLog(@"Connection failed: %@", [error description]);
+}
+
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection {
+    //Getting your response string
+//    NSString *responseString = [[NSString alloc] initWithData:sel encoding:NSUTF8StringEncoding];
 }
 
 
