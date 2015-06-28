@@ -178,52 +178,54 @@
 -(void)uploadPhotoToServer:(UIImage *)img {
     
     if (img != nil) {
-        // the boundary string : a random string, that will not repeat in post data, to separate post data fields.
-        NSString *BoundaryConstant = @"----------V2ymHFg03ehbqgZCaKO6jy";
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] initWithURL:[NSURL URLWithString:@"http://45.55.12.167:5000/upload/"]];
         
-        // string constant for the post parameter 'file'. My server uses this name: `file`. Your's may differ
-        NSString* FileParamConstant = @"file";
+        NSData *imageData = UIImageJPEGRepresentation(img, 1.0);
         
-        // the server url to which the image (or the media) is uploaded. Use your server url here
-        NSURL* requestURL = [NSURL URLWithString:@"http://45.55.12.167:5000/upload/"];
-        
-        // create request
-        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
         [request setCachePolicy:NSURLRequestReloadIgnoringLocalCacheData];
         [request setHTTPShouldHandleCookies:NO];
         [request setTimeoutInterval:60];
         [request setHTTPMethod:@"POST"];
         
+        NSString *boundary = @"unique-consistent-string";
+        
         // set Content-Type in HTTP header
-        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", BoundaryConstant];
+        NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@", boundary];
         [request setValue:contentType forHTTPHeaderField: @"Content-Type"];
         
         // post body
         NSMutableData *body = [NSMutableData data];
         
+        // add params (all params are strings)
+        [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=%@\r\n\r\n", @"imageCaption"] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"%@\r\n", @"Some Caption"] dataUsingEncoding:NSUTF8StringEncoding]];
+        
         // add image data
-        NSData *imageData = UIImageJPEGRepresentation(img, 1.0);
         if (imageData) {
-            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
-            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"%@\"; filename=\"file.jpg\"\r\n", FileParamConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"--%@\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+            [body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=%@; filename=imageName.jpg\r\n", @"imageFormKey"] dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:[@"Content-Type: image/jpeg\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
             [body appendData:imageData];
             [body appendData:[[NSString stringWithFormat:@"\r\n"] dataUsingEncoding:NSUTF8StringEncoding]];
         }
         
-        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", BoundaryConstant] dataUsingEncoding:NSUTF8StringEncoding]];
+        [body appendData:[[NSString stringWithFormat:@"--%@--\r\n", boundary] dataUsingEncoding:NSUTF8StringEncoding]];
         
         // setting the body of the post to the reqeust
         [request setHTTPBody:body];
         
         // set the content-length
-        NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[body length]];
+        NSString *postLength = [NSString stringWithFormat:@"%d", [body length]];
         [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
         
-        // set URL
-        [request setURL:requestURL];
         
-        NSURLConnection *conn = [[NSURLConnection alloc] initWithRequest:request delegate:self startImmediately:YES];
+        [NSURLConnection sendAsynchronousRequest:request queue:[NSOperationQueue currentQueue] completionHandler:^(NSURLResponse *response, NSData *data, NSError *error) {
+            if(data.length > 0)
+            {
+                //success
+            }
+        }];
     }
 }
 
