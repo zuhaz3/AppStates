@@ -54,10 +54,14 @@
                               if (error) {
                                   NSLog(@"ERROR %@", [error localizedDescription]);
                               } else {
-                                   self.elems = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
-                                  NSLog(@"response %@", response);
-                                  [self.tableView reloadData];
-                                  [self.refreshControl endRefreshing];
+                                  if ([response isKindOfClass:[NSArray class]]) {
+                                      self.elems = [NSJSONSerialization JSONObjectWithData:response options:NSJSONReadingAllowFragments error:nil];
+                                      NSLog(@"response %@", response);
+                                      [self.tableView reloadData];
+                                      [self.refreshControl endRefreshing];
+                                  } else {
+                                      // error not array
+                                  }
                               }
                           }];
 }
