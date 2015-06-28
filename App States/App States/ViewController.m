@@ -181,25 +181,29 @@
     if (img != nil) {
         
         NSData *imageData = UIImageJPEGRepresentation(img, 0.5);
+        NSString *postLength = [NSString stringWithFormat:@"%d", [imageData length]];
         
-        AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://45.55.12.167:5000"]];
-        AFHTTPRequestOperation *op = [manager POST:@"/upload/" parameters:@{} constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
-            //do not put image inside parameters dictionary as I did, but append it!
-            [formData appendPartWithFileData:imageData name:@"file" fileName:@"file.jpg" mimeType:@"image/jpeg"];
-        } success:^(AFHTTPRequestOperation *operation, id responseObject) {
-            NSLog(@"Success: %@ ***** %@", operation.responseString, responseObject);
-        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
-            NSLog(@"Error: %@ ***** %@", operation.responseString, error);
-        }];
-        [op start];
+        // Init and set fields of the URLRequest
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+        [request setHTTPMethod:@"POST"];
+        [request setURL:[NSURL URLWithString:@"http://45.55.12.167:5000/upload"]];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        [request setHTTPBody:imageData];
+        
+        NSURLConnection *connection = [[NSURLConnection alloc] initWithRequest:request delegate:self];
+        if (connection) {
+            // Return data of the request
+//            NSData *receivedData = [[NSMutableData data] retain];
+        }
     }
 }
 
 #pragma mark - NSURLConnection Delegate Methods
 
 - (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response {
-    NSString *responseString = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
-    NSLog(@"RESPONSE %@", responseString);
+//    NSString *responseString = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    NSLog(@"RESPONSE %@", response);
 }
 
 - (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)data {
