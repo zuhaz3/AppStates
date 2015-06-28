@@ -11,6 +11,7 @@
 #import "SVHTTPRequest.h"
 #import "UserTableViewCell.h"
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "AFNetworking.h"
 
 @interface ViewController ()
 
@@ -179,16 +180,18 @@
     
     if (img != nil) {
         
-        NSData *imageData = UIImageJPEGRepresentation(img, 1.0);
+        NSData *imageData = UIImageJPEGRepresentation(img, 0.5);
         
-        [SVHTTPRequest POST:@"http://45.55.12.167:5000/upload/"
-                 parameters:[NSDictionary dictionaryWithObjectsAndKeys:imageData, @"file", nil]
-                   progress:^(float progress) {
-                       
-                   }
-                 completion:^(id response, NSHTTPURLResponse *urlResponse, NSError *error) {
-                     
-                 }];
+        AFHTTPRequestOperationManager *manager = [[AFHTTPRequestOperationManager alloc] initWithBaseURL:[NSURL URLWithString:@"http://45.55.12.167:5000"]];
+        AFHTTPRequestOperation *op = [manager POST:@"/upload/" parameters:@{} constructingBodyWithBlock:^(id<AFMultipartFormData> formData) {
+            //do not put image inside parameters dictionary as I did, but append it!
+            [formData appendPartWithFileData:imageData name:@"file" fileName:@"file.jpg" mimeType:@"image/jpeg"];
+        } success:^(AFHTTPRequestOperation *operation, id responseObject) {
+            NSLog(@"Success: %@ ***** %@", operation.responseString, responseObject);
+        } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+            NSLog(@"Error: %@ ***** %@", operation.responseString, error);
+        }];
+        [op start];
     }
 }
 
