@@ -27,7 +27,7 @@
             </objects>
             <point key="canvasLocation" x="-340.5" y="363"/>
         </scene>
-        <!--App States-->
+        <!--Plink-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
                 <viewController id="vXZ-lx-hvc" customClass="ViewController" sceneMemberID="viewController">
@@ -80,7 +80,7 @@
                                                                     </attributedString>
                                                                     <color key="highlightedColor" red="0.99607849120000003" green="0.99215692280000001" blue="0.99215692280000001" alpha="1" colorSpace="deviceRGB"/>
                                                                     <variation key="widthClass=compact" fixedFrame="YES">
-                                                                        <rect key="frame" x="18" y="82" width="331" height="20.5"/>
+                                                                        <rect key="frame" x="18" y="82" width="331" height="21"/>
                                                                     </variation>
                                                                 </label>
                                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Danish Shaik" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="rBk-4G-vRH">
@@ -198,7 +198,7 @@
                             </mask>
                         </variation>
                     </view>
-                    <navigationItem key="navigationItem" title="App States" id="Cn4-AB-UYY">
+                    <navigationItem key="navigationItem" title="Plink" id="Cn4-AB-UYY">
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="6k9-8F-EHP">
                             <color key="tintColor" red="0.31062578909999999" green="0.31062578909999999" blue="0.31062578909999999" alpha="1" colorSpace="calibratedRGB"/>
                             <connections>

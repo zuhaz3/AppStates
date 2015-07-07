@@ -33,6 +33,8 @@
 		8708F7081B3FF0D300AE5B13 /* AFURLRequestSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 8708F6FD1B3FF0D300AE5B13 /* AFURLRequestSerialization.m */; };
 		8708F7091B3FF0D300AE5B13 /* AFURLResponseSerialization.m in Sources */ = {isa = PBXBuildFile; fileRef = 8708F6FF1B3FF0D300AE5B13 /* AFURLResponseSerialization.m */; };
 		8708F70A1B3FF0D300AE5B13 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 8708F7011B3FF0D300AE5B13 /* AFURLSessionManager.m */; };
+		8708F70D1B4073D500AE5B13 /* Icon@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 8708F70C1B4073D500AE5B13 /* Icon@2x.png */; };
+		8708F70F1B4073F500AE5B13 /* icongreylock.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 8708F70E1B4073F500AE5B13 /* icongreylock.jpg */; };
 		87981E5F1B3F4A92001624D6 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 87981E5E1B3F4A92001624D6 /* main.m */; };
 		87981E621B3F4A92001624D6 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 87981E611B3F4A92001624D6 /* AppDelegate.m */; };
 		87981E651B3F4A92001624D6 /* App_States.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 87981E631B3F4A92001624D6 /* App_States.xcdatamodeld */; };
@@ -110,6 +112,8 @@
 		8708F6FF1B3FF0D300AE5B13 /* AFURLResponseSerialization.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLResponseSerialization.m; sourceTree = "<group>"; };
 		8708F7001B3FF0D300AE5B13 /* AFURLSessionManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFURLSessionManager.h; sourceTree = "<group>"; };
 		8708F7011B3FF0D300AE5B13 /* AFURLSessionManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFURLSessionManager.m; sourceTree = "<group>"; };
+		8708F70C1B4073D500AE5B13 /* Icon@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon@2x.png"; sourceTree = "<group>"; };
+		8708F70E1B4073F500AE5B13 /* icongreylock.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = icongreylock.jpg; sourceTree = "<group>"; };
 		87981E591B3F4A92001624D6 /* App States.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "App States.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		87981E5D1B3F4A92001624D6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		87981E5E1B3F4A92001624D6 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -254,6 +258,8 @@
 				87D85EB21B3F58030098DBF1 /* UserTableViewCell.h */,
 				87D85EB31B3F58030098DBF1 /* UserTableViewCell.m */,
 				87981E6C1B3F4A92001624D6 /* Images.xcassets */,
+				8708F70E1B4073F500AE5B13 /* icongreylock.jpg */,
+				8708F70C1B4073D500AE5B13 /* Icon@2x.png */,
 				87981E6E1B3F4A92001624D6 /* LaunchScreen.xib */,
 				87981E631B3F4A92001624D6 /* App_States.xcdatamodeld */,
 				87981E5C1B3F4A92001624D6 /* Supporting Files */,
@@ -358,6 +364,7 @@
 				TargetAttributes = {
 					87981E581B3F4A92001624D6 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = 235XB3N5MT;
 					};
 					87981E741B3F4A93001624D6 = {
 						CreatedOnToolsVersion = 6.3.1;
@@ -365,7 +372,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 87981E541B3F4A92001624D6 /* Build configuration list for PBXProject "App States" */;
+			buildConfigurationList = 87981E541B3F4A92001624D6 /* Build configuration list for PBXProject "Plink" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -391,8 +398,10 @@
 			files = (
 				87981E6B1B3F4A92001624D6 /* Main.storyboard in Resources */,
 				87981E701B3F4A92001624D6 /* LaunchScreen.xib in Resources */,
+				8708F70F1B4073F500AE5B13 /* icongreylock.jpg in Resources */,
 				87981E6D1B3F4A92001624D6 /* Images.xcassets in Resources */,
 				8708F6D01B3F5D3F00AE5B13 /* profile.png in Resources */,
+				8708F70D1B4073D500AE5B13 /* Icon@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -567,10 +576,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "App States/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Debug;
 		};
@@ -578,10 +590,13 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				INFOPLIST_FILE = "App States/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE = "";
 			};
 			name = Release;
 		};
@@ -622,7 +637,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		87981E541B3F4A92001624D6 /* Build configuration list for PBXProject "App States" */ = {
+		87981E541B3F4A92001624D6 /* Build configuration list for PBXProject "Plink" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				87981E7D1B3F4A93001624D6 /* Debug */,
